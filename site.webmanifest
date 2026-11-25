@@ -1,0 +1,13 @@
+{
+  "name": "JTQ Global Support",
+  "short_name": "JTQ",
+  "description": "A boutique sales and marketing agency for growing businesses.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F4EFEA",
+  "theme_color": "#F4EFEA",
+  "icons": [
+    { "src": "assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
