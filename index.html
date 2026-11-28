@@ -74,6 +74,24 @@
     font-style: normal;
     font-display: swap;
   }
+  /* Arabic faces for the language toggle. They use the arabic unicode subset,
+     so they are only downloaded when Arabic text is actually on the page. */
+  @font-face {
+    font-family: 'Noto Naskh Arabic';
+    src: url('assets/fonts/noto-naskh-arabic.woff2') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+  }
+  @font-face {
+    font-family: 'Noto Sans Arabic';
+    src: url('assets/fonts/noto-sans-arabic.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+  }
 
   :root {
     color-scheme: light;
@@ -1382,6 +1400,283 @@
     border: 0;
   }
 
+
+  /* ============================================================
+     v3 utility layer
+     share · language · open-status · contact card · QR modal
+     ============================================================ */
+
+  /* ---------- masthead controls (share + language) ---------- */
+
+  .masthead__tools .lang-toggle { order: 2; }
+  .masthead__tools .share-toggle { order: 3; }
+  .masthead__tools .theme-toggle { order: 4; }
+
+  .share-toggle,
+  .lang-toggle {
+    appearance: none;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
+    box-shadow: var(--shadow-control);
+    cursor: pointer;
+    transition: color .35s var(--ease-soft), border-color .35s var(--ease-soft),
+                transform .5s var(--ease), background-color .55s var(--ease-soft);
+  }
+  .share-toggle {
+    width: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+  .share-toggle svg { width: 17px; height: 17px; }
+  .share-toggle:hover { color: var(--accent); border-color: var(--accent-line); transform: rotate(8deg); }
+  .share-toggle:active { transform: scale(.94); }
+
+  .lang-toggle {
+    min-width: 40px;
+    padding: 0 11px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    line-height: 1;
+  }
+  .lang-toggle:hover { color: var(--accent); border-color: var(--accent-line); }
+  .lang-toggle:active { transform: scale(.95); }
+
+  /* ---------- open-status pill ---------- */
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: var(--shadow-control);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    line-height: 1;
+    color: var(--ink-soft);
+  }
+  .status__dot {
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 3px rgba(255, 217, 102, .22);
+    animation: statusPulse 3.2s var(--ease-soft) infinite;
+  }
+  .status--closed .status__dot {
+    background: transparent;
+    border: 1.5px solid var(--ink-faint);
+    box-shadow: none;
+    animation: none;
+  }
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .45; }
+  }
+  [data-theme='dark'] .status { border-color: var(--line-strong); }
+
+  /* ---------- contact card (vCard) row ---------- */
+
+  button.card {
+    appearance: none;
+    width: 100%;
+    font-family: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+  button.card:focus-visible { outline-offset: -3px; }
+
+  /* ---------- footer QR trigger ---------- */
+
+  .footer__qr {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 30px;
+    padding: 0 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-faint);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .3s var(--ease-soft), border-color .3s var(--ease-soft),
+                background-color .3s var(--ease-soft), transform .3s var(--ease);
+  }
+  .footer__qr svg { width: 14px; height: 14px; }
+  .footer__qr:hover { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+  .footer__qr:active { transform: scale(.96); }
+
+  /* ---------- QR modal ---------- */
+
+  .qr-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+  }
+  .qr-modal[hidden] { display: none; }
+
+  .qr-modal__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(27, 27, 26, .5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    animation: qrFade .3s var(--ease-soft) both;
+  }
+
+  .qr-modal__card {
+    position: relative;
+    width: min(320px, 100%);
+    padding: 30px 28px 26px;
+    border: 1px solid var(--line-strong);
+    border-radius: 22px;
+    background: var(--surface);
+    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .55);
+    text-align: center;
+    animation: qrIn .38s var(--ease) both;
+  }
+
+  .qr-modal__close {
+    appearance: none;
+    position: absolute;
+    top: 14px;
+    inset-inline-end: 14px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink-soft);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: color .3s var(--ease-soft), border-color .3s var(--ease-soft), transform .3s var(--ease);
+  }
+  .qr-modal__close svg { width: 14px; height: 14px; }
+  .qr-modal__close:hover { color: var(--accent); border-color: var(--accent-line); transform: rotate(90deg); }
+
+  .qr-modal__title {
+    margin: 6px 0 4px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -.01em;
+    color: var(--ink);
+  }
+  .qr-modal__hint {
+    margin: 0 0 18px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-faint);
+  }
+  .qr-modal__code {
+    display: inline-block;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #FFFFFF;
+    line-height: 0;
+  }
+  .qr-modal__code svg { width: 208px; height: 208px; }
+  .qr-modal__url {
+    margin: 16px 0 0;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    color: var(--ink-soft);
+    word-break: break-all;
+  }
+
+  @keyframes qrFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes qrIn {
+    from { opacity: 0; transform: translateY(14px) scale(.97); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .qr-modal__scrim, .qr-modal__card { animation: none; }
+  }
+
+  /* ---------- Arabic (RTL) typography ---------- */
+
+  html[lang='ar'] {
+    --font-display: 'Noto Naskh Arabic', 'Playfair Display', Georgia, serif;
+    --font-body: 'Noto Sans Arabic', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  /* letter-spacing breaks Arabic letter joining; uppercase does nothing for it */
+  html[lang='ar'] .brand__title { letter-spacing: 0; line-height: 1.42; }
+  html[lang='ar'] .brand__title em { font-style: normal; }
+  html[lang='ar'] .eyebrow { font-style: normal; letter-spacing: 0; line-height: 1.7; }
+  html[lang='ar'] .brand__motto { font-style: normal; letter-spacing: 0; line-height: 1.55; }
+  html[lang='ar'] .brand__lede { line-height: 1.95; }
+  html[lang='ar'] .brand__meta { line-height: 1.7; }
+  html[lang='ar'] .card--primary .card__title { letter-spacing: 0; line-height: 1.5; }
+  html[lang='ar'] .card__sub { letter-spacing: 0; }
+  html[lang='ar'] .masthead__label,
+  html[lang='ar'] .group__label,
+  html[lang='ar'] .card--primary .card__sub,
+  html[lang='ar'] .copy,
+  html[lang='ar'] .footer__qr,
+  html[lang='ar'] .status {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  html[lang='ar'] .status { line-height: 1.6; }
+
+  /* ---------- RTL layout fixes (grid and flex flip on their own;
+     these are the physical left/right rules that do not) ---------- */
+
+  html[dir='rtl'] .layout::before { left: auto; right: 55.6%; }
+  html[dir='rtl'] .card:not(.card--primary)::before { left: auto; right: 0; }
+  html[dir='rtl'] .card--email .card__anchor { padding: 13px 16px 13px 10px; }
+  html[dir='rtl'] .copy { margin: 0 4px 0 16px; }
+  html[dir='rtl'] .card__arrow { transform: scaleX(-1); }
+  @media (max-width: 900px) {
+    html[dir='rtl'] .card--email .card__anchor { padding: 12px 14px 12px 8px; }
+    html[dir='rtl'] .copy { margin: 0 4px 0 12px; }
+  }
+  @media (max-width: 380px) {
+    html[dir='rtl'] .card--email .card__anchor { padding: 12px 14px 12px 4px; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    html[dir='rtl'] .card:hover .card__arrow,
+    html[dir='rtl'] .card--primary:hover .card__arrow { transform: translate(-2px, -2px) scaleX(-1); }
+  }
+
+  /* ---------- small screens: three compact controls in the masthead ---------- */
+
+  @media (max-width: 900px) {
+    .masthead__tools { gap: 10px; }
+  }
+  @media (max-width: 380px) {
+    .masthead { gap: 10px; }
+    .masthead__tools { gap: 8px; }
+    .share-toggle, .lang-toggle, .theme-toggle { width: 36px; height: 36px; min-width: 36px; }
+    .lang-toggle { padding: 0 9px; font-size: 9px; }
+    .share-toggle svg { width: 15px; height: 15px; }
+    .status { font-size: 10.5px; }
+  }
+
 </style>
 </head>
 
@@ -1402,7 +1697,15 @@
         </span>
       </a>
       <div class="masthead__tools">
-        <span class="masthead__label">Links</span>
+        <span class="masthead__label" data-i18n="linksLabel">Links</span>
+        <button class="lang-toggle" id="langToggle" type="button" aria-label="Change language" title="Change language">
+          <span id="langToggleCode">EN</span>
+        </button>
+        <button class="share-toggle" id="shareToggle" type="button" aria-label="Share this page" title="Share this page">
+          <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+            <path d="M229.66,109.66l-48,48a8,8,0,0,1-11.32-11.32L204.69,112H165a88,88,0,0,0-85.23,66,8,8,0,0,1-15.5-4A103.94,103.94,0,0,1,165,96h39.71L170.34,61.66a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,109.66ZM192,208H40V88a8,8,0,0,0-16,0V216a8,8,0,0,0,8,8H192a8,8,0,0,0,0-16Z"/>
+          </svg>
+        </button>
         <button class="theme-toggle" id="themeToggle" type="button" role="switch" aria-checked="false" aria-label="Dark theme" title="Switch to dark theme">
         <span class="theme-toggle__face">
           <svg class="theme-toggle__sun" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
@@ -1419,27 +1722,31 @@
     <main class="layout">
       <section class="brand" aria-labelledby="brandTitle">
 
-        <p class="eyebrow reveal" style="--d: 90ms">A boutique sales &amp; marketing agency</p>
+        <p class="eyebrow reveal" style="--d: 90ms" data-i18n="eyebrow">A boutique sales &amp; marketing agency</p>
 
-        <h1 class="brand__title" id="brandTitle">
+        <h1 class="brand__title" id="brandTitle" data-i18n="title">
           Your sales &amp; marketing partner for <em>growth</em>.
         </h1>
 
-        <p class="brand__lede reveal" style="--d: 180ms">
+        <p class="brand__lede reveal" style="--d: 180ms" data-i18n="lede">
           A boutique agency helping growing businesses build pipeline, create demand
           and strengthen digital presence.
         </p>
 
         <div class="brand__close">
-          <p class="brand__motto reveal" style="--d: 300ms">Everything is under control.</p>
+          <p class="brand__motto reveal" style="--d: 300ms" data-i18n="motto">Everything is under control.</p>
+          <p class="status reveal" style="--d: 320ms" id="openStatus">
+            <span class="status__dot" aria-hidden="true"></span>
+            <span id="openStatusText">Open now · closes 6pm PHT</span>
+          </p>
         <ul class="brand__meta reveal" style="--d: 250ms">
           <li>
             <svg class="pin" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,64a40,40,0,1,0,40,40A40,40,0,0,0,128,64Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,128Zm0-112a88.1,88.1,0,0,0-88,88c0,31.4,14.51,64.68,42,96.25a254.19,254.19,0,0,0,41.45,38.3,8,8,0,0,0,9.18,0A254.19,254.19,0,0,0,174,200.25c27.45-31.57,42-64.85,42-96.25A88.1,88.1,0,0,0,128,16Zm0,206c-16.53-13-72-60.75-72-118a72,72,0,0,1,144,0C200,161.23,144.53,209,128,222Z"/></svg>
-            Dasmariñas, PH <span class="sep">/</span> Al Nahyan, UAE
+            <span data-i18n="metaPlaces">Dasmariñas, PH <span class="sep">/</span> Al Nahyan, UAE</span>
           </li>
           <li>
             <svg class="pin" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg>
-            Daily, 9am to 6pm PHT
+            <span data-i18n="metaHours">Daily, 9am to 6pm PHT</span>
           </li>
         </ul>
         </div>
@@ -1448,7 +1755,7 @@
 
       <section class="links" aria-label="JTQ Global Support links">
         <div class="group">
-          <h2 class="group__label reveal" style="--d: 300ms">Work with us</h2>
+          <h2 class="group__label reveal" style="--d: 300ms" data-i18n="groupWork">Work with us</h2>
           <div class="stack">
             <a class="card card--primary reveal" style="--d: 340ms" href="https://jtq-global.com" target="_blank" rel="noopener noreferrer">
               <span class="card__frame" aria-hidden="true"></span>
@@ -1458,9 +1765,9 @@
                 </svg>
               </span>
               <span class="card__body">
-                <span class="card__title">Visit our website</span>
+                <span class="card__title" data-i18n="cardWebsite">Visit our website</span>
                 <span class="card__sub">jtq-global.com</span>
-                <span class="sr-only"> Opens in a new tab</span>
+                <span class="sr-only" data-i18n="newtab"> Opens in a new tab</span>
               </span>
               <svg class="card__arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
                 <path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/>
@@ -1475,19 +1782,34 @@
                   </svg>
                 </span>
                 <span class="card__body">
-                  <span class="card__title">Email us</span>
+                  <span class="card__title" data-i18n="cardEmail">Email us</span>
                   <span class="card__sub">hello@jtqglobal.com</span>
                 </span>
               </a>
               <button class="copy" type="button" data-copy="hello@jtqglobal.com" aria-label="Copy email address">
-                <span class="copy__label">Copy</span>
+                <span class="copy__label" data-i18n="copyIdle">Copy</span>
               </button>
             </div>
+
+            <button class="card reveal" style="--d: 415ms" type="button" id="vcardBtn" aria-label="Download our contact card">
+              <span class="card__icon">
+                <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                  <path d="M83.19,174.4a8,8,0,0,0,11.21-1.6,52,52,0,0,1,83.2,0,8,8,0,1,0,12.8-9.6A67.88,67.88,0,0,0,163,141.51a40,40,0,1,0-53.94,0A67.88,67.88,0,0,0,81.6,163.2,8,8,0,0,0,83.19,174.4ZM112,112a24,24,0,1,1,24,24A24,24,0,0,1,112,112Zm96-88H64A16,16,0,0,0,48,40V64H32a8,8,0,0,0,0,16H48v40H32a8,8,0,0,0,0,16H48v40H32a8,8,0,0,0,0,16H48v24a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V40A16,16,0,0,0,208,24Zm0,192H64V40H208Z"/>
+                </svg>
+              </span>
+              <span class="card__body">
+                <span class="card__title" data-i18n="vcardTitle">Save our contact details</span>
+                <span class="card__sub" data-i18n="vcardSub">Email, website &amp; addresses</span>
+              </span>
+              <svg class="card__arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/>
+              </svg>
+            </button>
           </div>
         </div>
 
         <div class="group">
-          <h2 class="group__label reveal" style="--d: 440ms">Follow along</h2>
+          <h2 class="group__label reveal" style="--d: 440ms" data-i18n="groupFollow">Follow along</h2>
           <div class="stack">
             <a class="card card--social reveal" style="--d: 470ms" href="https://ph.linkedin.com/company/jtq-support" target="_blank" rel="noopener noreferrer">
               <span class="card__icon">
@@ -1498,7 +1820,7 @@
               <span class="card__body">
                 <span class="card__title">LinkedIn</span>
                 <span class="card__sub">JTQ Support</span>
-                <span class="sr-only"> Opens in a new tab</span>
+                <span class="sr-only" data-i18n="newtab"> Opens in a new tab</span>
               </span>
               <svg class="card__arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
                 <path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/>
@@ -1514,7 +1836,7 @@
               <span class="card__body">
                 <span class="card__title">Instagram</span>
                 <span class="card__sub">@jtqsupport</span>
-                <span class="sr-only"> Opens in a new tab</span>
+                <span class="sr-only" data-i18n="newtab"> Opens in a new tab</span>
               </span>
               <svg class="card__arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
                 <path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/>
@@ -1530,7 +1852,7 @@
               <span class="card__body">
                 <span class="card__title">Facebook</span>
                 <span class="card__sub">JTQ Support</span>
-                <span class="sr-only"> Opens in a new tab</span>
+                <span class="sr-only" data-i18n="newtab"> Opens in a new tab</span>
               </span>
               <svg class="card__arrow" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
                 <path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/>
@@ -1543,7 +1865,13 @@
 
     <footer class="footer reveal" style="--d: 640ms">
       <p class="footer__copy">© 2026 JTQ Global Support</p>
-      <p class="footer__credit">Site by <a href="https://geanpaulo.com" target="_blank" rel="noopener noreferrer">Gean Paulo<span class="sr-only"> Opens in a new tab</span></a></p>
+      <button class="footer__qr" id="qrOpen" type="button" aria-haspopup="dialog">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+          <path d="M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm0,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48ZM200,40H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-64,72V144a8,8,0,0,1,16,0v32a8,8,0,0,1-16,0Zm80-16a8,8,0,0,1-8,8H184v40a8,8,0,0,1-8,8H144a8,8,0,0,1,0-16h24V144a8,8,0,0,1,16,0v8h24A8,8,0,0,1,216,160Zm0,32v16a8,8,0,0,1-16,0V192a8,8,0,0,1,16,0Z"/>
+        </svg>
+        <span data-i18n="qrButton">QR code</span>
+      </button>
+      <p class="footer__credit" data-i18n="credit">Site by <a href="https://geanpaulo.com" target="_blank" rel="noopener noreferrer">Gean Paulo<span class="sr-only"> Opens in a new tab</span></a></p>
     </footer>
   </div>
 
@@ -1552,6 +1880,21 @@
       <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/>
     </svg>
     <span id="toastText"></span>
+  </div>
+
+  <div class="qr-modal" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrTitle" hidden>
+    <div class="qr-modal__scrim" data-qr-close></div>
+    <div class="qr-modal__card">
+      <button class="qr-modal__close" id="qrClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+          <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/>
+        </svg>
+      </button>
+      <h2 class="qr-modal__title" id="qrTitle" data-i18n="qrTitle">Scan to open</h2>
+      <p class="qr-modal__hint" data-i18n="qrHint">Point a phone camera at the code.</p>
+      <div class="qr-modal__code" id="qrCode" role="img" aria-label="QR code for this page"></div>
+      <p class="qr-modal__url" id="qrUrl"></p>
+    </div>
   </div>
 
   <script type="application/ld+json">
@@ -1583,16 +1926,191 @@
       var root = document.documentElement;
       var toggle = document.getElementById('themeToggle');
       var meta = document.querySelector('meta[name="theme-color"]');
+      var toast = document.getElementById('toast');
+      var toastText = document.getElementById('toastText');
+      var toastTimer = null;
+
+      /* ============================================================
+         language · English markup is the source of truth; the
+         dictionary overrides it, "en" restores the original snapshot
+         ============================================================ */
+
+      var EN = {
+        shareAria: 'Share this page',
+        shareTitle: 'Share this page',
+        shareToast: 'Link copied to clipboard',
+        shareText: 'All JTQ Global Support links on one page.',
+        copyIdle: 'Copy',
+        copyDone: 'Copied',
+        copyAria: 'Copy email address',
+        copyDoneAria: 'Email address copied',
+        copyToast: '{x} copied to clipboard',
+        statusOpen: 'Open now · closes 6pm PHT',
+        statusBefore: 'Opens at 9am PHT',
+        statusTomorrow: 'Opens tomorrow at 9am PHT',
+        vcardAria: 'Download our contact card',
+        vcardToast: 'Contact card downloaded',
+        qrButton: 'QR code',
+        qrTitle: 'Scan to open',
+        qrHint: 'Point a phone camera at the code.',
+        qrCodeAria: 'QR code for this page',
+        qrClose: 'Close',
+        langAria: 'Change language',
+        langTitle: 'Change language',
+        darkThemeAria: 'Dark theme',
+        toLightTitle: 'Switch to light theme',
+        toDarkTitle: 'Switch to dark theme',
+        brandLinkAria: 'JTQ Global Support website, opens in a new tab',
+        linksSectionAria: 'JTQ Global Support links'
+      };
+
+      var DICT = {
+        tl: {
+          linksLabel: 'Mga Link',
+          eyebrow: 'Isang boutique na sales &amp; marketing agency',
+          title: 'Ang sales &amp; marketing partner ninyo tungo sa <em>paglago</em>.',
+          lede: 'Isang boutique agency na tumutulong sa mga negosyong lumalago na bumuo ng pipeline, lumikha ng demand at palakasin ang digital presence.',
+          motto: 'Nasa maayos na kamay ang lahat.',
+          metaPlaces: 'Dasmariñas, PH <span class="sep">/</span> Al Nahyan, UAE',
+          metaHours: 'Araw-araw, 9am hanggang 6pm PHT',
+          groupWork: 'Makipagtulungan sa amin',
+          groupFollow: 'Sundan kami',
+          cardWebsite: 'Bisitahin ang aming website',
+          cardEmail: 'Mag-email sa amin',
+          copyIdle: 'Kopyahin',
+          copyDone: 'Nakopya',
+          copyAria: 'Kopyahin ang email address',
+          copyDoneAria: 'Nakopya na ang email address',
+          copyToast: 'Nakopya ang {x} sa clipboard',
+          newtab: ' Bubukas sa bagong tab',
+          credit: 'Site ni <a href="https://geanpaulo.com" target="_blank" rel="noopener noreferrer">Gean Paulo<span class="sr-only"> Bubukas sa bagong tab</span></a>',
+          vcardTitle: 'I-save ang contact namin',
+          vcardSub: 'Email, website at mga address',
+          vcardAria: 'I-download ang aming contact card',
+          vcardToast: 'Na-download ang contact card',
+          qrButton: 'QR code',
+          qrTitle: 'I-scan para buksan',
+          qrHint: 'Ilapit ang camera ng telepono sa code.',
+          qrCodeAria: 'QR code ng pahinang ito',
+          qrClose: 'Isara',
+          shareAria: 'Ibahagi ang pahinang ito',
+          shareTitle: 'Ibahagi ang pahinang ito',
+          shareToast: 'Nakopya ang link sa clipboard',
+          shareText: 'Lahat ng link ng JTQ Global Support, isang pahina.',
+          statusOpen: 'Bukas na ngayon · hanggang 6pm PHT',
+          statusBefore: 'Magbubukas sa 9am PHT',
+          statusTomorrow: 'Magbubukas bukas sa 9am PHT',
+          langAria: 'Palitan ang wika',
+          langTitle: 'Palitan ang wika',
+          darkThemeAria: 'Madilim na tema',
+          toLightTitle: 'Ilipat sa maliwanag na tema',
+          toDarkTitle: 'Ilipat sa madilim na tema',
+          brandLinkAria: 'Website ng JTQ Global Support, bubukas sa bagong tab',
+          linksSectionAria: 'Mga link ng JTQ Global Support'
+        },
+        ar: {
+          linksLabel: 'روابط',
+          eyebrow: 'وكالة مبيعات وتسويق متخصصة',
+          title: 'شريكك في المبيعات والتسويق نحو <em>النمو</em>.',
+          lede: 'وكالة متخصصة تساعد الشركات النامية على بناء خط المبيعات، وخلق الطلب، وتعزيز الحضور الرقمي.',
+          motto: 'كل شيء تحت السيطرة.',
+          metaPlaces: 'داسماريناس، الفلبين <span class="sep">/</span> الناهيان، الإمارات',
+          metaHours: 'يوميًا، 9 صباحًا حتى 6 مساءً بتوقيت الفلبين',
+          groupWork: 'اعمل معنا',
+          groupFollow: 'تابعنا',
+          cardWebsite: 'زيارة موقعنا الإلكتروني',
+          cardEmail: 'راسلنا عبر البريد',
+          copyIdle: 'نسخ',
+          copyDone: 'تم النسخ',
+          copyAria: 'نسخ البريد الإلكتروني',
+          copyDoneAria: 'تم نسخ البريد الإلكتروني',
+          copyToast: 'تم نسخ {x} إلى الحافظة',
+          newtab: ' يفتح في علامة تبويب جديدة',
+          credit: 'الموقع بواسطة <a href="https://geanpaulo.com" target="_blank" rel="noopener noreferrer">جيان باولو<span class="sr-only"> يفتح في علامة تبويب جديدة</span></a>',
+          vcardTitle: 'حفظ بيانات التواصل',
+          vcardSub: 'البريد والموقع والعناوين',
+          vcardAria: 'تنزيل بطاقة التواصل',
+          vcardToast: 'تم تنزيل بطاقة التواصل',
+          qrButton: 'رمز QR',
+          qrTitle: 'امسح للفتح',
+          qrHint: 'وجّه كاميرا الهاتف نحو الرمز.',
+          qrCodeAria: 'رمز QR لهذه الصفحة',
+          qrClose: 'إغلاق',
+          shareAria: 'مشاركة هذه الصفحة',
+          shareTitle: 'مشاركة هذه الصفحة',
+          shareToast: 'تم نسخ الرابط إلى الحافظة',
+          shareText: 'كل روابط JTQ Global Support في صفحة واحدة.',
+          statusOpen: 'مفتوح الآن · حتى 6 مساءً',
+          statusBefore: 'يفتح 9 صباحًا',
+          statusTomorrow: 'يفتح غدًا 9 صباحًا',
+          langAria: 'تغيير اللغة',
+          langTitle: 'تغيير اللغة',
+          darkThemeAria: 'الوضع الداكن',
+          toLightTitle: 'التبديل إلى الوضع الفاتح',
+          toDarkTitle: 'التبديل إلى الوضع الداكن',
+          brandLinkAria: 'موقع JTQ Global Support، يفتح في علامة تبويب جديدة',
+          linksSectionAria: 'روابط JTQ Global Support'
+        }
+      };
+
+      var lang = 'en';
+
+      function detectLang() {
+        var candidates = window.navigator.languages || [window.navigator.language || 'en'];
+        for (var i = 0; i < candidates.length; i++) {
+          var code = String(candidates[i] || '').toLowerCase();
+          if (code.indexOf('tl') === 0 || code.indexOf('fil') === 0) return 'tl';
+          if (code.indexOf('ar') === 0) return 'ar';
+        }
+        return 'en';
+      }
+      try {
+        var savedLang = localStorage.getItem('jtq-lang');
+        lang = savedLang && DICT[savedLang] ? savedLang : detectLang();
+      } catch (e) {
+        lang = detectLang();
+      }
+
+      function t(key) {
+        return (DICT[lang] && DICT[lang][key]) || EN[key] || '';
+      }
+
+      var i18nNodes = [];
+      Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'), function (el) {
+        i18nNodes.push({ el: el, key: el.getAttribute('data-i18n'), html: el.innerHTML });
+      });
+
+      function applyLang(next) {
+        lang = DICT[next] ? next : 'en';
+        try { localStorage.setItem('jtq-lang', lang); } catch (e) {}
+        root.lang = lang === 'tl' ? 'fil' : lang;
+        root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        i18nNodes.forEach(function (node) {
+          var value = lang === 'en' ? node.html : DICT[lang][node.key];
+          if (typeof value === 'string') node.el.innerHTML = value;
+        });
+        var brandLink = document.querySelector('.masthead__brand');
+        if (brandLink) brandLink.setAttribute('aria-label', t('brandLinkAria'));
+        var linksSection = document.querySelector('.links');
+        if (linksSection) linksSection.setAttribute('aria-label', t('linksSectionAria'));
+        if (vcardBtn) vcardBtn.setAttribute('aria-label', t('vcardAria'));
+        syncLangLabels();
+        syncThemeUI();
+        syncCopyIdle();
+        syncShareLabels();
+        syncQrLabels();
+        updateOpenStatus();
+      }
+
+      /* ---------- theme ---------- */
 
       function syncThemeUI() {
         var dark = root.dataset.theme === 'dark';
         toggle.setAttribute('aria-checked', String(dark));
-        toggle.setAttribute('aria-label', 'Dark theme');
-        toggle.title = dark ? 'Switch to light theme' : 'Switch to dark theme';
+        toggle.setAttribute('aria-label', t('darkThemeAria'));
+        toggle.title = dark ? t('toLightTitle') : t('toDarkTitle');
         if (meta) meta.setAttribute('content', dark ? '#1B1B1A' : '#F4EFEA');
       }
-
-      syncThemeUI();
 
       toggle.addEventListener('click', function () {
         var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -1601,12 +2119,7 @@
         syncThemeUI();
       });
 
-      var copyBtn = document.querySelector('[data-copy]');
-      var copyLabel = copyBtn ? copyBtn.querySelector('.copy__label') : null;
-      var toast = document.getElementById('toast');
-      var toastText = document.getElementById('toastText');
-      var resetTimer = null;
-      var toastTimer = null;
+      /* ---------- toast + clipboard ---------- */
 
       function showToast(message) {
         if (!toast) return;
@@ -1631,36 +2144,586 @@
         document.body.removeChild(area);
       }
 
+      function copyText(text, onDone) {
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(onDone, function () {
+            legacyCopy(text);
+            onDone();
+          });
+        } else {
+          legacyCopy(text);
+          onDone();
+        }
+      }
+
+      var copyBtn = document.querySelector('[data-copy]');
+      var copyLabel = copyBtn ? copyBtn.querySelector('.copy__label') : null;
+      var resetTimer = null;
+
+      function syncCopyIdle() {
+        if (!copyBtn) return;
+        copyBtn.classList.remove('is-copied');
+        copyLabel.textContent = t('copyIdle');
+        copyBtn.setAttribute('aria-label', t('copyAria'));
+      }
+
       if (copyBtn) {
         copyBtn.addEventListener('click', function () {
           var email = copyBtn.getAttribute('data-copy');
-          var done = function () {
+          copyText(email, function () {
             copyBtn.classList.add('is-copied');
-            copyLabel.textContent = 'Copied';
-            copyBtn.setAttribute('aria-label', 'Email address copied');
-            showToast(email + ' copied to clipboard');
+            copyLabel.textContent = t('copyDone');
+            copyBtn.setAttribute('aria-label', t('copyDoneAria'));
+            showToast(t('copyToast').replace('{x}', email));
             clearTimeout(resetTimer);
-            resetTimer = setTimeout(function () {
-              copyBtn.classList.remove('is-copied');
-              copyLabel.textContent = 'Copy';
-              copyBtn.setAttribute('aria-label', 'Copy email address');
-            }, 2400);
-          };
-
-          if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(email).then(done).catch(function () {
-              legacyCopy(email);
-              done();
-            });
-          } else {
-            legacyCopy(email);
-            done();
-          }
+            resetTimer = setTimeout(syncCopyIdle, 2400);
+          });
         });
       }
 
+      /* ---------- share ---------- */
+
+      var shareBtn = document.getElementById('shareToggle');
+
+      function cleanUrl() {
+        return location.href.split('#')[0];
+      }
+
+      function syncShareLabels() {
+        shareBtn.setAttribute('aria-label', t('shareAria'));
+        shareBtn.title = t('shareTitle');
+      }
+
+      shareBtn.addEventListener('click', function () {
+        var url = cleanUrl();
+        if (navigator.share) {
+          navigator.share({ title: document.title, text: t('shareText'), url: url }).catch(function (error) {
+            if (error && error.name === 'AbortError') return;
+            copyText(url, function () { showToast(t('shareToast')); });
+          });
+        } else {
+          copyText(url, function () { showToast(t('shareToast')); });
+        }
+      });
+
+      /* ---------- language toggle ---------- */
+
+      var langToggle = document.getElementById('langToggle');
+      var langToggleCode = document.getElementById('langToggleCode');
+      var LANG_CODES = { en: 'EN', tl: 'FIL', ar: 'AR' };
+
+      function syncLangLabels() {
+        langToggle.setAttribute('aria-label', t('langAria'));
+        langToggle.title = t('langTitle');
+        langToggleCode.textContent = LANG_CODES[lang];
+      }
+
+      langToggle.addEventListener('click', function () {
+        applyLang(lang === 'en' ? 'tl' : lang === 'tl' ? 'ar' : 'en');
+      });
+
+      /* ---------- open-status pill (daily 9am-6pm PHT) ---------- */
+
+      var statusPill = document.getElementById('openStatus');
+      var statusText = document.getElementById('openStatusText');
+      var OPENS_MIN = 9 * 60;
+      var CLOSES_MIN = 18 * 60;
+
+      function phtMinutesOfDay() {
+        try {
+          var parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Manila',
+            hourCycle: 'h23',
+            hour: '2-digit',
+            minute: '2-digit'
+          }).formatToParts(new Date());
+          var h = NaN, m = NaN;
+          parts.forEach(function (p) {
+            if (p.type === 'hour') h = parseInt(p.value, 10);
+            else if (p.type === 'minute') m = parseInt(p.value, 10);
+          });
+          if (isNaN(h) || isNaN(m)) return null;
+          return (h % 24) * 60 + m;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function updateOpenStatus() {
+        if (!statusPill) return;
+        var minutes = phtMinutesOfDay();
+        if (minutes === null) { statusPill.hidden = true; return; }
+        var open = minutes >= OPENS_MIN && minutes < CLOSES_MIN;
+        statusPill.classList.toggle('status--closed', !open);
+        statusText.textContent = open ? t('statusOpen')
+          : (minutes < OPENS_MIN ? t('statusBefore') : t('statusTomorrow'));
+      }
+
+      /* ---------- contact card (vCard) ---------- */
+
+      var vcardBtn = document.getElementById('vcardBtn');
+
+      function buildVCard() {
+        var lines = [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          'N:;JTQ Global Support;;;',
+          'FN:JTQ Global Support',
+          'ORG:JTQ Global Support',
+          'EMAIL;TYPE=WORK,INTERNET:hello@jtqglobal.com',
+          'URL:https://jtq-global.com',
+          'ADR;TYPE=WORK:;;Dasmariñas;Cavite;;;Philippines',
+          'ADR;TYPE=WORK:;;Al Nahyan;Abu Dhabi;;;United Arab Emirates',
+          'NOTE:Daily 9am to 6pm PHT (Philippine Time)',
+          'END:VCARD'
+        ];
+        return lines.join('\r\n');
+      }
+
+      if (vcardBtn) {
+        vcardBtn.addEventListener('click', function () {
+          var blob = new Blob(['\ufeff' + buildVCard()], { type: 'text/vcard;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement('a');
+          link.href = url;
+          link.download = 'jtq-global-support.vcf';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+          showToast(t('vcardToast'));
+        });
+      }
+
+      /* ============================================================
+         QR Code generator — Model 2, byte mode, ECC level M with
+         automatic boost and automatic mask selection.
+         Adapted from Project Nayuki's "QR Code generator library"
+         (typescript-javascript/qrcodegen.ts), Copyright (c) Project
+         Nayuki, MIT License: https://www.nayuki.io/page/qr-code-generator-library
+         ============================================================ */
+
+      var QrGen = (function () {
+
+        var FORMAT_BITS = [1, 0, 3, 2];  // format bits for ECC L, M, Q, H
+        var ECC_CODEWORDS_PER_BLOCK = [
+          [-1,  7, 10, 15, 20, 26, 18, 20, 24, 30, 18, 20, 24, 26, 30, 22, 24, 28, 30, 28, 28, 28, 28, 30, 30, 26, 28, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+          [-1, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26, 30, 22, 22, 24, 24, 28, 28, 26, 26, 26, 26, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28],
+          [-1, 13, 22, 18, 26, 18, 24, 18, 22, 20, 24, 28, 26, 24, 20, 30, 24, 28, 28, 26, 30, 28, 30, 30, 30, 30, 28, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+          [-1, 17, 28, 22, 16, 22, 28, 26, 26, 24, 28, 24, 28, 22, 24, 24, 30, 28, 28, 26, 28, 30, 24, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30]
+        ];
+        var NUM_ERROR_CORRECTION_BLOCKS = [
+          [-1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4,  4,  4,  4,  4,  6,  6,  6,  6,  7,  8,  8,  9,  9, 10, 12, 12, 12, 13, 14, 15, 16, 17, 18, 19, 19, 20, 21, 22, 24, 25],
+          [-1, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5,  5,  8,  9,  9, 10, 10, 11, 13, 14, 16, 17, 17, 18, 20, 21, 23, 25, 26, 28, 29, 31, 33, 35, 37, 38, 40, 43, 45, 47, 49],
+          [-1, 1, 1, 2, 2, 4, 4, 6, 6, 8, 8,  8, 10, 12, 16, 12, 17, 16, 18, 21, 20, 23, 23, 25, 27, 29, 34, 34, 35, 38, 40, 43, 45, 48, 51, 53, 56, 59, 62, 65, 68],
+          [-1, 1, 1, 2, 4, 4, 4, 5, 6, 8, 8, 11, 11, 16, 16, 18, 16, 19, 21, 25, 25, 25, 34, 30, 32, 35, 37, 40, 42, 45, 48, 51, 54, 57, 60, 63, 66, 70, 74, 77, 81]
+        ];
+
+        function appendBits(val, len, bb) {
+          for (var i = len - 1; i >= 0; i--) bb.push((val >>> i) & 1);
+        }
+        function getBit(x, i) {
+          return ((x >>> i) & 1) !== 0;
+        }
+        function getNumRawDataModules(ver) {
+          var result = (16 * ver + 128) * ver + 64;
+          if (ver >= 2) {
+            var numAlign = Math.floor(ver / 7) + 2;
+            result -= (25 * numAlign - 10) * numAlign - 55;
+            if (ver >= 7) result -= 36;
+          }
+          return result;
+        }
+        function getNumDataCodewords(ver, ecl) {
+          return Math.floor(getNumRawDataModules(ver) / 8) -
+            ECC_CODEWORDS_PER_BLOCK[ecl][ver] * NUM_ERROR_CORRECTION_BLOCKS[ecl][ver];
+        }
+        function numCharCountBits(ver) {
+          return ver <= 9 ? 8 : 16;  // byte mode
+        }
+        function utf8Bytes(str) {
+          str = encodeURI(str);
+          var result = [];
+          for (var i = 0; i < str.length; i++) {
+            if (str.charAt(i) !== '%') result.push(str.charCodeAt(i));
+            else { result.push(parseInt(str.substr(i + 1, 2), 16)); i += 2; }
+          }
+          return result;
+        }
+        function reedSolomonComputeDivisor(degree) {
+          var result = [];
+          for (var i = 0; i < degree - 1; i++) result.push(0);
+          result.push(1);
+          var root = 1;
+          for (var j = 0; j < degree; j++) {
+            for (var k = 0; k < result.length; k++) {
+              result[k] = reedSolomonMultiply(result[k], root);
+              if (k + 1 < result.length) result[k] ^= result[k + 1];
+            }
+            root = reedSolomonMultiply(root, 0x02);
+          }
+          return result;
+        }
+        function reedSolomonComputeRemainder(data, divisor) {
+          var result = divisor.map(function () { return 0; });
+          data.forEach(function (b) {
+            var factor = b ^ result.shift();
+            result.push(0);
+            divisor.forEach(function (coef, i) {
+              result[i] ^= reedSolomonMultiply(coef, factor);
+            });
+          });
+          return result;
+        }
+        function reedSolomonMultiply(x, y) {
+          var z = 0;
+          for (var i = 7; i >= 0; i--) {
+            z = (z << 1) ^ ((z >>> 7) * 0x11D);
+            z ^= ((y >>> i) & 1) * x;
+          }
+          return z;
+        }
+
+        function encode(text) {
+          var data = utf8Bytes(text);
+          var ecl = 1;  // start at Medium (table row 1)
+          var version, dataUsedBits = 0, usedBits;
+          for (version = 1; version <= 40; version++) {
+            usedBits = 4 + numCharCountBits(version) + data.length * 8;
+            if (usedBits <= getNumDataCodewords(version, ecl) * 8) {
+              dataUsedBits = usedBits;
+              break;
+            }
+          }
+          if (version > 40) throw new Error('Data too long');
+          for (var e = 2; e <= 3; e++) {  // boost to Quartile or High while it still fits
+            if (dataUsedBits <= getNumDataCodewords(version, e) * 8) ecl = e;
+          }
+
+          var bb = [];
+          appendBits(4, 4, bb);  // byte mode indicator
+          appendBits(data.length, numCharCountBits(version), bb);
+          for (var b = 0; b < data.length; b++) appendBits(data[b], 8, bb);
+          var capBits = getNumDataCodewords(version, ecl) * 8;
+          appendBits(0, Math.min(4, capBits - bb.length), bb);
+          appendBits(0, (8 - bb.length % 8) % 8, bb);
+          for (var pad = 0xEC; bb.length < capBits; pad ^= 0xEC ^ 0x11) appendBits(pad, 8, bb);
+          var dataCodewords = [];
+          for (var j = 0; j * 8 < bb.length; j++) dataCodewords.push(0);
+          bb.forEach(function (bit, i) {
+            dataCodewords[i >>> 3] |= bit << (7 - (i & 7));
+          });
+          return buildMatrix(version, ecl, dataCodewords);
+        }
+
+        function buildMatrix(version, ecl, dataCodewords) {
+          var size = version * 4 + 17;
+          var modules = [], isFunction = [];
+          for (var r = 0; r < size; r++) {
+            var mRow = [], fRow = [];
+            for (var c = 0; c < size; c++) { mRow.push(false); fRow.push(false); }
+            modules.push(mRow);
+            isFunction.push(fRow);
+          }
+
+          function setFunctionModule(x, y, dark) {
+            modules[y][x] = dark;
+            isFunction[y][x] = true;
+          }
+          function drawFunctionPatterns() {
+            for (var i = 0; i < size; i++) {
+              setFunctionModule(6, i, i % 2 === 0);
+              setFunctionModule(i, 6, i % 2 === 0);
+            }
+            drawFinderPattern(3, 3);
+            drawFinderPattern(size - 4, 3);
+            drawFinderPattern(3, size - 4);
+            var alignPatPos = getAlignmentPatternPositions();
+            var numAlign = alignPatPos.length;
+            for (var a = 0; a < numAlign; a++) {
+              for (var b = 0; b < numAlign; b++) {
+                if (!(a === 0 && b === 0 || a === 0 && b === numAlign - 1 || a === numAlign - 1 && b === 0))
+                  drawAlignmentPattern(alignPatPos[a], alignPatPos[b]);
+              }
+            }
+            drawFormatBits(0);
+            drawVersion();
+          }
+          function drawFormatBits(mask) {
+            var data = FORMAT_BITS[ecl] << 3 | mask;
+            var rem = data;
+            for (var i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
+            var bits = (data << 10 | rem) ^ 0x5412;
+            for (var a = 0; a <= 5; a++) setFunctionModule(8, a, getBit(bits, a));
+            setFunctionModule(8, 7, getBit(bits, 6));
+            setFunctionModule(8, 8, getBit(bits, 7));
+            setFunctionModule(7, 8, getBit(bits, 8));
+            for (var b = 9; b < 15; b++) setFunctionModule(14 - b, 8, getBit(bits, b));
+            for (var c = 0; c < 8; c++) setFunctionModule(size - 1 - c, 8, getBit(bits, c));
+            for (var d = 8; d < 15; d++) setFunctionModule(8, size - 15 + d, getBit(bits, d));
+            setFunctionModule(8, size - 8, true);
+          }
+          function drawVersion() {
+            if (version < 7) return;
+            var rem = version;
+            for (var i = 0; i < 12; i++) rem = (rem << 1) ^ ((rem >>> 11) * 0x1F25);
+            var bits = version << 12 | rem;
+            for (var n = 0; n < 18; n++) {
+              var color = getBit(bits, n);
+              var a = size - 11 + n % 3;
+              var b = Math.floor(n / 3);
+              setFunctionModule(a, b, color);
+              setFunctionModule(b, a, color);
+            }
+          }
+          function drawFinderPattern(x, y) {
+            for (var dy = -4; dy <= 4; dy++) {
+              for (var dx = -4; dx <= 4; dx++) {
+                var dist = Math.max(Math.abs(dx), Math.abs(dy));
+                var xx = x + dx, yy = y + dy;
+                if (0 <= xx && xx < size && 0 <= yy && yy < size)
+                  setFunctionModule(xx, yy, dist !== 2 && dist !== 4);
+              }
+            }
+          }
+          function drawAlignmentPattern(x, y) {
+            for (var dy = -2; dy <= 2; dy++) {
+              for (var dx = -2; dx <= 2; dx++)
+                setFunctionModule(x + dx, y + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+            }
+          }
+          function getAlignmentPatternPositions() {
+            if (version === 1) return [];
+            var numAlign = Math.floor(version / 7) + 2;
+            var step = Math.floor((version * 8 + numAlign * 3 + 5) / (numAlign * 4 - 4)) * 2;
+            var result = [6];
+            for (var pos = size - 7; result.length < numAlign; pos -= step)
+              result.splice(1, 0, pos);
+            return result;
+          }
+          function addEccAndInterleave(data) {
+            var numBlocks = NUM_ERROR_CORRECTION_BLOCKS[ecl][version];
+            var blockEccLen = ECC_CODEWORDS_PER_BLOCK[ecl][version];
+            var rawCodewords = Math.floor(getNumRawDataModules(version) / 8);
+            var numShortBlocks = numBlocks - rawCodewords % numBlocks;
+            var shortBlockLen = Math.floor(rawCodewords / numBlocks);
+            var blocks = [];
+            var rsDiv = reedSolomonComputeDivisor(blockEccLen);
+            for (var i = 0, k = 0; i < numBlocks; i++) {
+              var dat = data.slice(k, k + shortBlockLen - blockEccLen + (i < numShortBlocks ? 0 : 1));
+              k += dat.length;
+              var ecc = reedSolomonComputeRemainder(dat, rsDiv);
+              if (i < numShortBlocks) dat.push(0);
+              blocks.push(dat.concat(ecc));
+            }
+            var result = [];
+            for (var n = 0; n < blocks[0].length; n++) {
+              blocks.forEach(function (block, j) {
+                if (n !== shortBlockLen - blockEccLen || j >= numShortBlocks)
+                  result.push(block[n]);
+              });
+            }
+            return result;
+          }
+          function drawCodewords(data) {
+            var i = 0;
+            for (var right = size - 1; right >= 1; right -= 2) {
+              if (right === 6) right = 5;
+              for (var vert = 0; vert < size; vert++) {
+                for (var j = 0; j < 2; j++) {
+                  var x = right - j;
+                  var upward = ((right + 1) & 2) === 0;
+                  var y = upward ? size - 1 - vert : vert;
+                  if (!isFunction[y][x] && i < data.length * 8) {
+                    modules[y][x] = getBit(data[i >>> 3], 7 - (i & 7));
+                    i++;
+                  }
+                }
+              }
+            }
+          }
+          function applyMask(mask) {
+            for (var y = 0; y < size; y++) {
+              for (var x = 0; x < size; x++) {
+                var invert;
+                switch (mask) {
+                  case 0:  invert = (x + y) % 2 === 0; break;
+                  case 1:  invert = y % 2 === 0; break;
+                  case 2:  invert = x % 3 === 0; break;
+                  case 3:  invert = (x + y) % 3 === 0; break;
+                  case 4:  invert = (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0; break;
+                  case 5:  invert = x * y % 2 + x * y % 3 === 0; break;
+                  case 6:  invert = (x * y % 2 + x * y % 3) % 2 === 0; break;
+                  case 7:  invert = ((x + y) % 2 + x * y % 3) % 2 === 0; break;
+                }
+                if (!isFunction[y][x] && invert) modules[y][x] = !modules[y][x];
+              }
+            }
+          }
+          function getPenaltyScore() {
+            var result = 0;
+            var PENALTY_N1 = 3, PENALTY_N2 = 3, PENALTY_N3 = 40, PENALTY_N4 = 10;
+            var x, y;
+            for (y = 0; y < size; y++) {
+              var runColor = false, runX = 0;
+              var runHistory = [0, 0, 0, 0, 0, 0, 0];
+              for (x = 0; x < size; x++) {
+                if (modules[y][x] === runColor) {
+                  runX++;
+                  if (runX === 5) result += PENALTY_N1;
+                  else if (runX > 5) result++;
+                } else {
+                  finderPenaltyAddHistory(runX, runHistory);
+                  if (!runColor) result += finderPenaltyCountPatterns(runHistory) * PENALTY_N3;
+                  runColor = modules[y][x];
+                  runX = 1;
+                }
+              }
+              result += finderPenaltyTerminateAndCount(runColor, runX, runHistory) * PENALTY_N3;
+            }
+            for (x = 0; x < size; x++) {
+              var runColor2 = false, runY = 0;
+              var runHistory2 = [0, 0, 0, 0, 0, 0, 0];
+              for (y = 0; y < size; y++) {
+                if (modules[y][x] === runColor2) {
+                  runY++;
+                  if (runY === 5) result += PENALTY_N1;
+                  else if (runY > 5) result++;
+                } else {
+                  finderPenaltyAddHistory(runY, runHistory2);
+                  if (!runColor2) result += finderPenaltyCountPatterns(runHistory2) * PENALTY_N3;
+                  runColor2 = modules[y][x];
+                  runY = 1;
+                }
+              }
+              result += finderPenaltyTerminateAndCount(runColor2, runY, runHistory2) * PENALTY_N3;
+            }
+            for (y = 0; y < size - 1; y++) {
+              for (x = 0; x < size - 1; x++) {
+                var color = modules[y][x];
+                if (color === modules[y][x + 1] && color === modules[y + 1][x] && color === modules[y + 1][x + 1])
+                  result += PENALTY_N2;
+              }
+            }
+            var dark = 0;
+            modules.forEach(function (r) {
+              r.forEach(function (c) { if (c) dark++; });
+            });
+            var total = size * size;
+            var k = Math.ceil(Math.abs(dark * 20 - total * 10) / total) - 1;
+            result += k * PENALTY_N4;
+            return result;
+          }
+          function finderPenaltyCountPatterns(runHistory) {
+            var n = runHistory[1];
+            var core = n > 0 && runHistory[2] === n && runHistory[3] === n * 3 && runHistory[4] === n && runHistory[5] === n;
+            return (core && runHistory[0] >= n * 4 && runHistory[6] >= n ? 1 : 0)
+                 + (core && runHistory[6] >= n * 4 && runHistory[0] >= n ? 1 : 0);
+          }
+          function finderPenaltyTerminateAndCount(currentRunColor, currentRunLength, runHistory) {
+            if (currentRunColor) {
+              finderPenaltyAddHistory(currentRunLength, runHistory);
+              currentRunLength = 0;
+            }
+            currentRunLength += size;
+            finderPenaltyAddHistory(currentRunLength, runHistory);
+            return finderPenaltyCountPatterns(runHistory);
+          }
+          function finderPenaltyAddHistory(currentRunLength, runHistory) {
+            if (runHistory[0] === 0) currentRunLength += size;
+            runHistory.pop();
+            runHistory.unshift(currentRunLength);
+          }
+
+          drawFunctionPatterns();
+          drawCodewords(addEccAndInterleave(dataCodewords));
+
+          var msk = -1, minPenalty = 1000000000;
+          for (var i = 0; i < 8; i++) {
+            applyMask(i);
+            drawFormatBits(i);
+            var penalty = getPenaltyScore();
+            if (penalty < minPenalty) { msk = i; minPenalty = penalty; }
+            applyMask(i);
+          }
+          applyMask(msk);
+          drawFormatBits(msk);
+
+          return { size: size, version: version, modules: modules };
+        }
+
+        return { encode: encode };
+      })();
+
+      /* ---------- QR modal ---------- */
+
+      var qrModal = document.getElementById('qrModal');
+      var qrOpenBtn = document.getElementById('qrOpen');
+      var qrCloseBtn = document.getElementById('qrClose');
+      var qrCodeBox = document.getElementById('qrCode');
+      var qrUrlText = document.getElementById('qrUrl');
+      var qrTrigger = null;
+
+      // destination encoded by the QR code — kept fixed so printed cards and
+      // stickers always lead to the same place, not wherever the page is hosted
+      var QR_URL = 'https://jtq-global.com/about/';
+
+      function qrSvg(text) {
+        var code = QrGen.encode(text);
+        var border = 4;  // quiet zone, in modules
+        var dim = code.size + border * 2;
+        var path = '';
+        for (var y = 0; y < code.size; y++) {
+          for (var x = 0; x < code.size; x++) {
+            if (code.modules[y][x]) path += 'M' + (x + border) + ' ' + (y + border) + 'h1v1h-1z';
+          }
+        }
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + dim + ' ' + dim + '" shape-rendering="crispEdges">' +
+          '<rect width="' + dim + '" height="' + dim + '" fill="#FFFFFF"/>' +
+          '<path d="' + path + '" fill="#2E2E2E"/></svg>';
+      }
+
+      function syncQrLabels() {
+        if (qrCloseBtn) qrCloseBtn.setAttribute('aria-label', t('qrClose'));
+        if (qrCodeBox) qrCodeBox.setAttribute('aria-label', t('qrCodeAria'));
+      }
+
+      function openQr() {
+        qrTrigger = document.activeElement;
+        var url = QR_URL;
+        qrCodeBox.innerHTML = qrSvg(url);
+        qrCodeBox.setAttribute('aria-label', t('qrCodeAria'));
+        qrUrlText.textContent = url;
+        qrModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        qrCloseBtn.focus();
+        document.addEventListener('keydown', qrKeydown);
+      }
+
+      function closeQr() {
+        qrModal.hidden = true;
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', qrKeydown);
+        if (qrTrigger && qrTrigger.focus) qrTrigger.focus();
+      }
+
+      function qrKeydown(event) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeQr();
+        } else if (event.key === 'Tab') {
+          event.preventDefault();  // single focusable control: keep focus on close
+          qrCloseBtn.focus();
+        }
+      }
+
+      qrOpenBtn.addEventListener('click', openQr);
+      qrCloseBtn.addEventListener('click', closeQr);
+      qrModal.querySelector('[data-qr-close]').addEventListener('click', closeQr);
+
+      /* ---------- pointer light on the ticket ---------- */
+
       var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       var primary = document.querySelector('.card--primary');
 
       if (primary) {
@@ -1671,6 +2734,12 @@
           primary.style.setProperty('--my', ((event.clientY - rect.top) / rect.height * 100).toFixed(1) + '%');
         });
       }
+
+      /* ---------- init ---------- */
+
+      applyLang(lang);
+      updateOpenStatus();
+      setInterval(updateOpenStatus, 60000);
 
     })();
   </script>
